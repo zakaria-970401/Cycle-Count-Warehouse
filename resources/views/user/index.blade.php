@@ -55,53 +55,27 @@
                                         data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
                                         <i class="bi bi-x fs-2"></i>
                                     </span>
-                                    <!--end::Cancel-->
-                                    <!--begin::Remove-->
-                                    <span
-                                        class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
-                                        <i class="bi bi-x fs-2"></i>
-                                    </span>
-                                    <!--end::Remove-->
                                 </div>
-                                <!--end::Image input-->
-                                <!--begin::Hint-->
                                 <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
-                                <!--end::Hint-->
                             </div>
-                            <!--end::Col-->
                         </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
                         <div class="row mb-6">
-                            <!--begin::Label-->
                             <label class="col-lg-4 col-form-label required fw-semibold fs-6">Full Name</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
                             <div class="col-lg-8">
-                                <!--begin::Row-->
                                 <div class="row">
-                                    <!--begin::Col-->
                                     <div class="col-lg-6 fv-row">
                                         <input type="text" name="fname"
                                             class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                             placeholder="First name" value="Max" />
                                     </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-6 fv-row">
                                         <input type="text" name="lname"
                                             class="form-control form-control-lg form-control-solid" placeholder="Last name"
                                             value="Smith" />
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Row-->
                             </div>
-                            <!--end::Col-->
                         </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
                         <div class="row mb-6">
                             <!--begin::Label-->
                             <label class="col-lg-4 col-form-label required fw-semibold fs-6">Company</label>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\CycleCount;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,152 +10,69 @@ use App\Imports\CycleCount\CycleCountImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\Datatables\Datatables;
 use Session;
+use Str;
 
 
-class SCController extends Controller
+class CycleCountGudangController extends Controller
 {
 
-    public function index()
-    {
-        // dd('aloo');
-        $cross = false;
-        $dept = DB::table('departments')->where('id', Auth::user()->dept_id)->first();
-       
-        if(date('l') != 'Saturday')
-        {
-            $currentTime = strtotime(date('H:i:s'));
-            $startTime   =  strtotime("00:00:01");
-            $endTime     = strtotime("06:59:00");
-
-            if($currentTime >= strtotime("06:59:01") and  $currentTime <= strtotime("15:00:00") )
-            {
-                $shift = 1;
-                $tgl_sekarang = date('Y-m-d');
-            }
-            else if($currentTime >= strtotime("15:00:01") and  $currentTime <= strtotime("23:00:00"))
-            {
-                $shift = 2;
-                $tgl_sekarang = date('Y-m-d');
-            }
-            else if($currentTime >= strtotime("23:00:01") and  $currentTime <= strtotime("23:59:00"))
-            {
-                $shift = 3;
-                $tgl_sekarang = date('Y-m-d');
-            }
-            else if($currentTime >= $startTime && $currentTime <= $endTime) {
-                $tgl_sekarang = date('Y-m-d', strtotime('-1 day'));
-                $shift = 3;
-                $cross = true;
-            }
-            $shift_number = $shift;
-        }
-        else
-        {
-            $currentTime = strtotime(date('H:i:s'));
-            if($currentTime >= strtotime("06:30:01") and  $currentTime <= strtotime("11:59:00") )
-            {
-                $shift = 1;
-                $tgl_sekarang = date('Y-m-d');
-            }
-            else if($currentTime >= strtotime("12:00:01") and  $currentTime <= strtotime("17:00:00"))
-            {
-                $shift = 2;
-                $tgl_sekarang = date('Y-m-d');
-            }
-            else if($currentTime >= strtotime("17:00:01") and  $currentTime <= strtotime("22:01:00"))
-            {
-                $shift = 3;
-                $tgl_sekarang = date('Y-m-d');
-            }
-
-            $shift_number = $shift;
-        }
-
-      if($cross) {
-            $where = DB::raw("CONCAT(tgl_upload, ' ', jam_upload) >= '".$tgl_sekarang." 23:00:00' AND CONCAT(tgl_upload, ' ', jam_upload) <= '".date('Y-m-d')." 06:59:59'");
-        }else{
-            $where = DB::raw("tgl_upload = '".date('Y-m-d')."'");
-        }
-
-         $master = DB::table('cycle_count')
-                    ->whereRaw($where)
-                    ->where('shift', $shift)
-                    ->where('dept', $dept->name)
-                    ->where('status', '!=', 99)
-                    ->orderBy('id', 'DESC')
-                    ->get();
-
-        return view('cycle-count.sc.index', compact('master', 'shift', 'dept'));
+    public function hitung(){
+        return view('gudang.hitung');
     }
-    public function kerjakan($dept, $no_urut, $shift, $blok, $kloter)
+    public function getListBlok(){
+        $data = DB::table('cycle_count')
+                // ->where('status', 1)
+                ->groupBy('blok')
+                ->get();
+
+                return response()->json([
+                    'data' => $data
+                ]);
+    }
+
+    public function formHitung($kloter, $blok, $tgl_upload)
+    {
+        $tgl_upload = explode(' ', $tgl_upload)[0];
+        DB::table('cycle_count')
+                ->where('kloter', $kloter)
+                ->where('blok', $blok)
+                ->whereDate('upload_at', $tgl_upload)
+                ->update([
+                    'status' => 2,
+                    'count_at' => date('Y-m-d H:i:s'),
+                    'count_by' => Auth::user()->name
+                ]);
+
+          DB::table('cycle_count_logg')->insert([
+                    'konten' => Auth::user()->name .' Memulai Perhitungan Cycle Count di BLOK ' . $blok,
+                    'type'   => 'gudang',
+                    'created_at'    => date('Y-m-d H:i:s'),
+                    'created_by'    => Auth::user()->name,
+                ]);
+
+        return view('gudang.form_hitung', compact('kloter', 'blok', 'tgl_upload'));
+    }
+    
+    public function getCycleCount($kloter, $blok, $tgl_upload)
     {
        $data =  DB::table('cycle_count')
-                ->where('dept', $dept)
-                ->where('no_urut', $no_urut)
-                ->where('shift', $shift)
-                ->where('blok', $blok)
                 ->where('kloter', $kloter)
-                ->whereNotIn('status', [99, 0])
-                ->whereDate('tgl_upload', date('Y-m-d'))
+                ->where('blok', $blok)
+                ->whereDate('upload_at', $tgl_upload)
                 ->get();
-                // dd($data);
-
-        return view('cycle-count.sc.list_proses', compact('data', 'dept', 'no_urut', 'shift', 'blok'));
-    }
-
-    public function post_proses(Request $request)
-    {
-        $id = $request->id;
-        $ok           = [];
-        $not_ok       = [];
-        $filter_count = [];
-        $hitung       = 0;
-        for($i = 0; $i < count($id); $i++)
-        {
-            $hasil[] = DB::table('cycle_count')->where('id', $id[$i])->get();
-
-            $sesuai = $hasil[$i]->where('case_qty', $request->qty_aktual[$i]);
-            
-            if(count($sesuai) <= 0) {
-                $not_ok[] = 1; 
-            }else{
-                $ok[] = 1;
-            }
-
-            DB::table('cycle_count')->where('id', $id[$i])->update(
-                [
-                    'jam_sc' => date('H:i:s'),
-                    'tgl_sc' => date('Y-m-d'),
-                    'qty_lapangan' => $request->qty_aktual[$i],
-                    'status' => $hasil[$i][0]->case_qty == $request->qty_aktual[$i] ? 0 : 11 ,
-                ]
-            );
-        }
-
-        $hitung = array_sum($not_ok);
-
-        if($hitung > 0)
-        {
-            $not_ok = $hitung;
-        }
-        else
-        {
-            $ok = 'ok';
-        }
-        DB::table('cycle_count_logg')->insert([
-            'konten' => 'STOK CONTROL ' .$request->dept .' Selesai Mengerjakan Blok ' . $request->blok. ' Pada Tanggal ' . date('d-M-Y') . ' Jam ' . date('H:i'),
-            'tanggal' => date('Y-m-d'),
-            'jam'   => date('H:i:s'),
-            'dept'  => $request->dept,
-            'type'   => 'sc'
-        ]);
 
         return response()->json([
-            'data' => [
-                'ok'     => $ok,
-                'not_ok' => $not_ok,
-            ],
+            'data' => $data
         ]);
+    }
+
+    public function postCycleCount(Request $request)
+    {
+        dd('a');
+        for ($i=0; $i <count($request->qty) ; $i++) { 
+            $validasi = Str::contains($request->qty[$i], ',');
+        }
+       dd($validasi);
     }
 
     public function DetailHasil($blok, $dept)

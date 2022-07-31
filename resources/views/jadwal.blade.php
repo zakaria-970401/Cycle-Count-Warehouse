@@ -22,16 +22,18 @@
                                         <div class="card-body d-flex flex-column">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center pe-2 mb-5">
+                                                    <a href="javascript:void(0)" onclick="showJadwal('{{$item->upload_at}}')">
                                                     <span
                                                         class="text-danger fw-bold fs-5 flex-grow-1">{{ \Carbon\Carbon::parse($item->upload_at)->format('d M Y') }}</span>
-                                                    <div class="symbol symbol-50px">
+                                                </a>
+                                                    {{-- <div class="symbol symbol-50px">
                                                         <span class="symbol-label bg-light">
                                                             <a href="" class="btn btn-md btn-dark"><i
                                                                     class="fas fa-eye"></i></a>
                                                         </span>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
-                                                <div class="d-flex align-items-center">
+                                                {{-- <div class="d-flex align-items-center">
                                                     <a href="#" class="symbol symbol-35px me-2"
                                                         data-bs-toggle="tooltip" title="Ana Stone">
                                                         <img src="{{ asset('assets/media/avatars/300-6.jpg') }}"
@@ -42,7 +44,7 @@
                                                         <img src="{{ asset('assets/media/avatars/300-5.jpg') }}"
                                                             alt="" />
                                                     </a>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -71,4 +73,10 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+    function showJadwal(tanggal){
+        alert(tanggal)
+    }
+    </script>
 @endsection

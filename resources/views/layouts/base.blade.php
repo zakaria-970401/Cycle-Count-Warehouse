@@ -159,7 +159,7 @@
                                         <!--end::Menu separator-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-5">
-                                            <a href="{{ route('profile') }}" class="menu-link px-5">My
+                                            <a href="{{ url('user/profile') }}" class="menu-link px-5">My
                                                 Profile</a>
                                         </div>
                                         <div class="menu-item px-5">
