@@ -9,91 +9,23 @@
         .hide {
             display: none;
         }
-
-        .adminActions {
-            position: fixed;
-            bottom: 35px;
-            right: 35px;
-        }
-
-        .adminButton {
-            height: 70px;
-            width: 70px;
-            background-color: rgba(43, 184, 0, 0.8);
-            border-radius: 50%;
-            display: block;
-            color: #fff;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .adminButton i {
-            font-size: 22px;
-        }
-
-        .adminButtons {
-            position: absolute;
-            width: 140%;
-            bottom: 120%;
-            text-align: center;
-        }
-
-        .adminButtons a {
-            display: block;
-            width: 145px;
-            height: 145px;
-            border-radius: 50%;
-            text-decoration: none;
-            margin: 10px auto 0;
-            line-height: 1.15;
-            color: #fff;
-            opacity: 0;
-            visibility: hidden;
-            position: relative;
-            box-shadow: 0 0 5px 1px rgba(51, 51, 51, .3);
-        }
-
-        .adminActions a i {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .adminToggle {
-            -webkit-appearance: none;
-            position: absolute;
-            border-radius: 50%;
-            top: 0;
-            left: 0;
-            margin: 0;
-            width: 150%;
-            height: 100%;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            outline: none;
-            z-index: 2;
-            transition: box-shadow .2s ease-in-out;
-            box-shadow: 0 3px 5px 1px rgba(51, 51, 51, .3);
-        }
     </style>
     <div class="container-xxl" id="kt_content_container">
 
-        <div class="row">
-            <form action="{{ url('cycle-count/gudang/postCycleCount') }}" method="post" id="postCycleCount">
-                @csrf
+        <form action="{{ url('cycle-count/gudang/postCycleCount') }}" method="post" id="postCycleCount">
+            @csrf
+            <div class="row">
                 <div class="col-sm-12">
                     <div class="row appendList">
 
                     </div>
                 </div>
-                <div class="appendbutton">
-
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="float-end">
+                <button type="submit" class="btn btn-success btn-lg adminActions"><i class="fas fa-save"></i>
+                    Simpan</button>
+            </div>
+        </form>
     </div>
     <script type="text/javascript">
         $('.appendList').html("")
@@ -120,6 +52,10 @@
                                                     aria-describedby="helpId" placeholder="Masukan Qty">
                                                 <small id="helpId" class="form-text text-danger">*Gunakan titik jika angka pecahan
                                                     ex: 3.5</small>
+                                                    <input type="hidden" required class="form-control" name="id[]" id=""
+                                                    aria-describedby="helpId" value="${value.id}">
+                                                    <input type="hidden" required class="form-control" name="blok" id=""
+                                                    aria-describedby="helpId" value="{{ $blok }}">
                                             </div>
                                         </div>
                                     </div>
@@ -133,45 +69,61 @@
             }
         });
 
-        function postCycleCount() {
-            submit()
-        }
-
-        function submit() {
-            $('#postCycleCount').on('submit', function(e) {
-                $('.adminActions').hide('fast');
-                e.preventDefault();
-                $.ajax({
-                    url: "{{ url('cycle-count/gudang/postCycleCount') }}",
-                    type: "POST",
-                    data: $('#postCycleCount').serialize(),
-                    dataType: "JSON",
-                    success: function(response) {
-                        if (response.status == 'success') {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Data berhasil disimpan',
-                                icon: 'success',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                if (result.value) {
-                                    window.location.href =
-                                        "{{ url('cycle-count/gudang/index') }}";
-                                }
-                            })
-                        }
-                    },
-                    error: function(error) {
+        $('#postCycleCount').on('submit', function(e) {
+            $('.adminActions').hide('fast');
+            e.preventDefault();
+            $.ajax({
+                url: "{{ url('cycle-count/gudang/postCycleCount') }}",
+                type: "POST",
+                data: $('#postCycleCount').serialize(),
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.status == 'koma') {
+                        $('.adminActions').show('fast');
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Internal Server Error, please refresh this page',
+                            text: 'Inputan kamu masih ada koma..',
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         })
-                        $('.adminActions').show('fast');
                     }
-                });
+                    if (response.data == 0) {
+                        Swal.fire({
+                            title: 'Good Joob!',
+                            text: 'Tidak Ada Selisih Pada Perhitungan Cycle Count',
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href =
+                                    "{{ url('cycle-count/gudang/hitung') }}";
+                            }
+                        })
+                    } else if (response.data > 0) {
+                        Swal.fire({
+                            title: 'Selisih Perhitungan!',
+                            text: 'Ada ' + response.data +
+                                ' Data Yang Selisih Pada Perhitungan Cycle Count',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href =
+                                    "{{ url('cycle-count/gudang/hitung') }}";
+                            }
+                        })
+                    }
+                },
+                error: function(error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Internal Server Error, please refresh this page',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                    $('.adminActions').show('fast');
+                }
             });
-        }
+        });
     </script>
 @endsection

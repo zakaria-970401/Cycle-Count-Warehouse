@@ -35,8 +35,12 @@ Route::prefix('cycle-count/gudang')->group(function () {
     Route::get('/formHitung/{kloter}/{blok}/{tgl_upload}', [CycleCountGudangController::class, 'formHitung']);
     Route::get('/getCycleCount/{kloter}/{blok}/{tgl_upload}', [CycleCountGudangController::class, 'getCycleCount']);
     Route::post('/postCycleCount', [CycleCountGudangController::class, 'postCycleCount']);
+    Route::get('/revisiCycleCount', [CycleCountGudangController::class, 'revisiCycleCount']);
+    Route::POST('/revisiCycleCount', [CycleCountGudangController::class, 'postrevisiCycleCount']);
 });
 Route::get('cycle-count/aktifitas', [CycleCountAdminController::class, 'aktifitas']);
 Route::get('cycle-count/jadwal', [CycleCountAdminController::class, 'jadwal']);
+Route::get('cycle-count/generateExcel', [CycleCountAdminController::class, 'generateExcel']);
+Route::get('cycle-count/cariData/{tgl_mulai}/{tgl_selesai}', [CycleCountAdminController::class, 'cariData']);
+Route::get('cycle-count/showJadwal/{tanggal}', [CycleCountAdminController::class, 'showJadwal']);
 Route::get('user/profile', [UserController::class, 'index']);
-
