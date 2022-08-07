@@ -43,7 +43,7 @@ class CycleCountGudangController extends Controller
             ->update([
                 'status' => 2,
                 'count_at' => date('Y-m-d H:i:s'),
-                'count_by' => Auth::user()->username
+                'count_by' => Auth::user()->name
             ]);
 
         DB::table('cycle_count_logg')->insert([
@@ -122,7 +122,7 @@ class CycleCountGudangController extends Controller
     {
         $data = DB::table('cycle_count')
             ->where('status', 3)
-            ->where('count_by', Auth::user()->username)
+            ->where('count_by', Auth::user()->name)
             ->get();
 
         return view('gudang.form_revisi', compact('data'));

@@ -80,29 +80,42 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                                <td scope="row">aa</td>
-                                            </tr>
                                         </tbody>
                                     </table>    
                                 </div>
                             </div>`);
-                        $('#table').DataTable({
+                        var table = $('#table').DataTable({
+                            columnDefs: [{
+                                "defaultContent": "-",
+                                "targets": "_all"
+                            }], 
                             dom: 'Bfrtip',
                             buttons: [
                                 'copy', 'excel',
                             ]
-                        });
+                        }).draw();
 
+                        $.each(response.data, function(key, value) {
+                            if(value.status == 1){
+                                var status_hitung = '<span class="badge badge-danger">Belum Di Hitung</span>';
+                            }else if(value.status == 3 ){
+                                var status_hitung = '<span class="badge badge-warning">Proses Revisi</span>';
+                            }else{
+                                var status_hitung = '<span class="badge badge-success">Sudah Di Hitung</span>';
+                            }
+                            table.row.add([
+                                parseInt(key + 1),
+                                value.name,
+                                value.material,
+                                value.description,
+                                value.blok,
+                                value.case_qty,
+                                value.qty_lapangan,
+                                value.qty_validasi,
+                                value.reason,
+                                status_hitung
+                            ]).draw();
+                        });
                     }
                 });
 

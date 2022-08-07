@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CycleCountAdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CycleCountGudangController;
+use App\Http\Controllers\CycleCountSuperAdminController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,26 @@ Route::prefix('cycle-count/gudang')->group(function () {
     Route::get('/revisiCycleCount', [CycleCountGudangController::class, 'revisiCycleCount']);
     Route::POST('/revisiCycleCount', [CycleCountGudangController::class, 'postrevisiCycleCount']);
 });
+
+Route::prefix('cycle-count/superadmin')->group(function () {
+    Route::get('/user', [CycleCountSuperAdminController::class, 'masterUser']);
+    Route::POST('/post_user', [CycleCountSuperAdminController::class, 'postUser']);
+    Route::get('/showUser/{id}', [CycleCountSuperAdminController::class, 'showUser']);
+    Route::get('/resetPassword/{id}', [CycleCountSuperAdminController::class, 'resetPassword']);
+    Route::POST('/updateUser', [CycleCountSuperAdminController::class, 'updateUser']);
+    Route::get('/menu', [CycleCountSuperAdminController::class, 'aksesMenu']);
+});
+
+Route::prefix('permission/')->group(function () {
+    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/add', [PermissionController::class, 'store'])->name('permission.add');
+    Route::post('/add_group', [PermissionController::class, 'add_group'])->name('permission.add_group');
+    Route::get('/lihat_permission/{id}', [PermissionController::class, 'lihat_permission']);
+    Route::post('/add_group_permission', [PermissionController::class, 'add_group_permission'])->name('permission.add_group_permission');
+    Route::get('/hapus_permission/{kategori}/{id}', [PermissionController::class, 'hapus_permission']);
+    Route::get('/update_permission/{kategori}/{nama}/{id}', [PermissionController::class, 'update_permission']);
+});
+
 Route::get('cycle-count/aktifitas', [CycleCountAdminController::class, 'aktifitas']);
 Route::get('cycle-count/jadwal', [CycleCountAdminController::class, 'jadwal']);
 Route::get('cycle-count/generateExcel', [CycleCountAdminController::class, 'generateExcel']);

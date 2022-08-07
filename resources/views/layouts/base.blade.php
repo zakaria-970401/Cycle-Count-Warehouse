@@ -13,8 +13,8 @@
     <link href="{{ url('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css" />
-    <link href="//cdn.datatables.net/1.10.19/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="//cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+    {{-- <link href="//cdn.datatables.net/1.10.19/css/dataTables.bootstrap5.min.css" rel="stylesheet"> --}}
+    {{-- <link href="//cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap5.min.css" rel="stylesheet"> --}}
 
     <script src="{{ url('assets/js/jquery.js') }}"></script>
 
@@ -224,13 +224,13 @@
         <script src="{{ url('assets/plugins/global/plugins.bundle.js') }}"></script>
         <script src="{{ url('assets/js/scripts.bundle.js') }}"></script>
         <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap5.min.js"></script>
+        {{-- <script src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap5.min.js"></script> --}}
         <script src="//cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
         <script src="//cdn.datatables.net/buttons/1.5.6/js/buttons.bootstrap4.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
         <script src="//cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
         <script src="//cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
-        <script src="//cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>
+        {{-- <script src="//cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script> --}}
 
 
         <script type="text/javascript">

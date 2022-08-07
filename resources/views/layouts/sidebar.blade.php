@@ -37,6 +37,45 @@
     </div>
 </div>
 
+<div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
+    class="menu-item here {{ request()->is('cycle-count/superadmin/*') ? 'show' : '' }} py-3">
+    <span class="menu-link menu-center" title="MANAGEMENT USER" data-bs-toggle="tooltip" data-bs-trigger="hover"
+        data-bs-dismiss="click" data-bs-placement="right">
+        <span class="menu-icon me-0">
+            <i class="fas fa-users fs-2"></i>
+        </span>
+    </span>
+    <div class="menu-sub menu-sub-dropdown w-225px w-lg-275px px-1 py-4">
+        <div class="menu-item">
+            <a class="{{ request()->is('cycle-count/superadmin/user') ? 'menu-link active' : 'menu-link' }}"
+                href="{{ url('cycle-count/superadmin/user') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Master User</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="{{ request()->is('cycle-count/superadmin/menu') ? 'menu-link active' : 'menu-link' }}"
+                href="{{ url('cycle-count/superadmin/menu') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Akses Menu</span>
+            </a>
+        </div>
+        {{-- {{-- <div class="menu-item">
+            <a class="{{ request()->is('cycle-count/aktifitas') ? 'menu-link active' : 'menu-link' }}"
+                href="{{ url('cycle-count/aktifitas') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Aktifitas Cycle Count</span>
+            </a>
+        </div> --}}
+    </div>
+</div>
+
 @php
 $revisi = DB::table('cycle_count')
     ->where('status', 3)
