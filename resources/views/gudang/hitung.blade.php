@@ -36,7 +36,7 @@
                         var badge_status = 'badge-warning'
                         var button_kerjakan =
                             '<div class="fs-3 fw-bold text-dark"><a href="{{ url('cycle-count/gudang/formHitung') }}/' +
-                            value.kloter + '/' + value.blok + '/' + value.upload_at +
+                            value.blok + '/' + value.upload_at +
                             '")}}" class="btn btn-dark btn-lg"><i class="fas fa-check-circle"></i> Hitung Sekarang</a></div>'
                     } else if (value.status == 2) {
                         var status = 'PROSES PERHITUNGAN'

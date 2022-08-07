@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\CycleCount;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Yajra\DataTables\Datatables;
 
-class DasboardCycleCountController extends Controller
+class CycleCountReportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class DasboardCycleCountController extends Controller
      */
     public function index()
     {
-        return view('cycle-count.wrh1.dashboard.index');
+        return view('report.index');
     }
 
     /**
@@ -75,7 +75,8 @@ class DasboardCycleCountController extends Controller
                     'data' => $data
                 ]
             ]);
-        }
+    }
+
         if($kategori == 'performa_foreman')
         {
             $data = DB::table('cycle_count')

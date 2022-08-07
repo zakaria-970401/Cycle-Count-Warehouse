@@ -30,7 +30,7 @@
     <script type="text/javascript">
         $('.appendList').html("")
         $.ajax({
-            url: "{{ url('cycle-count/gudang/getCycleCount') }}/" + '{{ $kloter }}' + '/' +
+            url: "{{ url('cycle-count/gudang/getCycleCount') }}/" +
                 '{{ $blok }}' + '/' + '{{ $tgl_upload }}',
             type: "GET",
             dataType: "JSON",

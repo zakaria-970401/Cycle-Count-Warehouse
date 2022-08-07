@@ -16,11 +16,6 @@ use Validator;
 
 class CycleCountAdminController extends Controller
 {
-    // public function ExportExcel($dept, $tgl_mulai, $tgl_selesai)
-    // {
-    //     return Excel::download(new CycleCountResultExport($dept, $tgl_mulai, $tgl_selesai), 'Report-'. $dept . '-' . $tgl_mulai . ' sd ' . $tgl_selesai. '.xls');
-    // }
-
     public function upload_excel()
     {
         $data = DB::table('cycle_count')->whereDate('upload_at', date('Y-m-d'))->get();
@@ -81,11 +76,8 @@ class CycleCountAdminController extends Controller
             return back();
         }
 
-        $no_urut = DB::table('cycle_count')->orderBy('id', 'DESC')->value('no_urut');
-        $no_urut = $no_urut != null ? $no_urut + 1 : 1;
-
         $excel = $request->file('file');
-        Excel::import(new CycleCountImport($no_urut), $excel);
+        Excel::import(new CycleCountImport, $excel);
         DB::table('cycle_count_logg')->insert([
             'konten' => Auth::user()->name . ' Mengupload data excel',
             'created_at' => date('Y-m-d H:i:s'),
@@ -250,7 +242,7 @@ class CycleCountAdminController extends Controller
             ->where('shift', $shift)
             ->where('dept', $dept)
             ->where('status', '!=', 99)
-            ->groupBy('kloter')
+            ->groupBy('blok')
             ->get();
         // dd($data);
         return Datatables::of($data)->make(true);

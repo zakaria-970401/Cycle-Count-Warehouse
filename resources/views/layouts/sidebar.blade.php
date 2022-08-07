@@ -1,3 +1,18 @@
+@php
+    $permission = DB::table('auth_group_permission')
+                ->join('auth_permission', 'auth_permission.id', '=', 'auth_group_permission.permission_id')
+                ->where('auth_group_permission.group_id', Auth::user()->auth_group)
+                ->pluck('auth_permission.name')
+                ->toArray();
+
+    $revisi = DB::table('cycle_count')
+                ->where('status', 3)
+                ->where('count_by', Auth::user()->name)
+                ->count();
+                // dd($revisi);
+@endphp
+
+@if (in_array('menu_admin', $permission))
 <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
     class="menu-item here {{ request()->is('cycle-count/admin/*') ? 'show' : '' }} py-3">
     <span class="menu-link menu-center" title="MENU ADMIN" data-bs-toggle="tooltip" data-bs-trigger="hover"
@@ -36,7 +51,9 @@
         </div>
     </div>
 </div>
+@endif
 
+@if (in_array('menu_superadmin', $permission))
 <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
     class="menu-item here {{ request()->is('cycle-count/superadmin/*') ? 'show' : '' }} py-3">
     <span class="menu-link menu-center" title="MANAGEMENT USER" data-bs-toggle="tooltip" data-bs-trigger="hover"
@@ -64,24 +81,11 @@
                 <span class="menu-title">Akses Menu</span>
             </a>
         </div>
-        {{-- {{-- <div class="menu-item">
-            <a class="{{ request()->is('cycle-count/aktifitas') ? 'menu-link active' : 'menu-link' }}"
-                href="{{ url('cycle-count/aktifitas') }}">
-                <span class="menu-bullet">
-                    <span class="bullet bullet-dot"></span>
-                </span>
-                <span class="menu-title">Aktifitas Cycle Count</span>
-            </a>
-        </div> --}}
     </div>
 </div>
+@endif
 
-@php
-$revisi = DB::table('cycle_count')
-    ->where('status', 3)
-    ->where('count_by', Auth::user()->username)
-    ->count();
-@endphp
+@if(in_array('menu_gudang', $permission))
 <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
     class="menu-item here {{ request()->is('cycle-count/gudang/*') ? 'show' : '' }} py-3">
     <span class="menu-link menu-center" title="MENU GUDANG" data-bs-toggle="tooltip" data-bs-trigger="hover"
@@ -126,7 +130,9 @@ $revisi = DB::table('cycle_count')
         </div>
     </div>
 </div>
+@endif
 
+@if(in_array('generate_excel', $permission))
 <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
     class="menu-item here {{ request()->is('cycle-count/excel/*') ? 'show' : '' }} py-3">
     <span class="menu-link menu-center" title="GENERATE EXCEL" data-bs-toggle="tooltip" data-bs-trigger="hover"
@@ -147,54 +153,31 @@ $revisi = DB::table('cycle_count')
         </div>
     </div>
 </div>
-{{-- <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
-    <span class="menu-link menu-center" title="Report" data-bs-toggle="tooltip" data-bs-trigger="hover"
+@endif
+
+@if(in_array('report', $permission))
+<div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
+    class="menu-item here {{ request()->is('cycle-count/report/*') ? 'show' : '' }} py-3">
+    <span class="menu-link menu-center" title="MENU REPORT" data-bs-toggle="tooltip" data-bs-trigger="hover"
         data-bs-dismiss="click" data-bs-placement="right">
         <span class="menu-icon me-0">
-            <i class="bi bi-file-text fs-2"></i>
+            <i class="fas fa-chart-line fs-2"></i>
         </span>
     </span>
     <div class="menu-sub menu-sub-dropdown w-225px w-lg-275px px-1 py-4">
-        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-            <span class="menu-link">
+        <div class="menu-item">
+            <a class="{{ request()->is('cycle-count/report') ? 'menu-link active' : 'menu-link' }}"
+                href="{{ url('cycle-count/report') }}">
                 <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                 </span>
-                <span class="menu-title">Pages</span>
-                <span class="menu-arrow"></span>
-            </span>
-            <div class="menu-sub menu-sub-accordion menu-active-bg">
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                    <span class="menu-link">
-                        <span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">User Profile</span>
-                        <span class="menu-arrow"></span>
-                    </span>
-                    <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                            <a class="menu-link" href="../../demo4/dist/pages/user-profile/overview.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Overview</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <a class="menu-link" href="../../demo4/dist/pages/about.html">
-                        <span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">About Us</span>
-                    </a>
-                </div>
-            </div>
+                <span class="menu-title">Menu Report</span>
+            </a>
         </div>
     </div>
-</div> --}}
+</div>
+@endif
+
 <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
     <span class="menu-link menu-center" title="Logout" onclick="postLogout()" data-bs-trigger="hover"
         data-bs-dismiss="click" data-bs-placement="right">

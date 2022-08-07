@@ -26,7 +26,7 @@
                                             <input type="file" class="form-control-file fileUpload" name="file"
                                                 id="" required placeholder="" aria-describedby="fileHelpId">
                                         </div>
-                                        <small class="text-danger">*xls, *xlsx</small>
+                                        <small class="text-danger">*xls</small>
                                     </div>
                                     <div class="col-sm-2">
                                         <a href="{{ asset('format-master.xlsx') }}" class="btn btn-lg text-white"
@@ -75,7 +75,7 @@
                                                             style="zoom: 140%;">
                                                     </th>
                                                     <th>BLOK</th>
-                                                    <th>KLOTER</th>
+                                                    {{-- <th>KLOTER</th> --}}
                                                     <th>MATERIAL</th>
                                                     <th>DESCRIPTION</th>
                                                     <th>CASE QTY</th>
@@ -92,7 +92,7 @@
                                                                 style="zoom: 180%;" value="{{ $item->id }}">
                                                         </td>
                                                         <td>{{ $item->blok }}</td>
-                                                        <td>{{ $item->kloter }}</td>
+                                                        {{-- <td>{{ $item->kloter }}</td> --}}
                                                         <td>{{ $item->material }}</td>
                                                         <td>{{ $item->description }}</td>
                                                         <td>{{ $item->case_qty }}</td>

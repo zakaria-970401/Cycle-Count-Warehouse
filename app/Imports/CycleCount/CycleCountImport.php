@@ -15,11 +15,6 @@ use Illuminate\Support\Facades\Validator;
 
 class CycleCountImport implements ToCollection, WithHeadingRow
 {
-    protected $no_urut;
-    public function __construct($no_urut)
-    {
-        $this->no_urut = $no_urut; 
-    }
 
     public function collection(Collection $rows)
     {
@@ -41,14 +36,12 @@ class CycleCountImport implements ToCollection, WithHeadingRow
             {
                 $data[] =  array(
                 'blok'      => $row['blok'],
-                'kloter'    => $row['kloter'],
                 'material'  => $row['material'],
                 'description' => $row['description'],
                 'case_uom'  => $row['case_uom'],
                 'case_qty'  => $row['case_qty'],
                 'upload_at' => date('Y-m-d H:i:s'),
                 'upload_by' => Auth::user()->name,
-                'no_urut'   => $this->no_urut,
               );
             }
         }

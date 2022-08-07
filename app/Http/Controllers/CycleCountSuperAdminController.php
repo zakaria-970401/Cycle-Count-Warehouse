@@ -83,6 +83,13 @@ class CycleCountSuperAdminController extends Controller
         return view('super_admin.menu', compact('permission', 'auth_group'));
     }
 
+    public function deleteUser($id)
+    {
+        DB::table('users')->where('id', $id)->delete();
+        Session::flash('success', 'User berhasil dihapus');
+        return back();
+    }
+
     public function showMenu($id)
     {
         $auth_group = DB::table('auth_group')->where('id', $id)->first();

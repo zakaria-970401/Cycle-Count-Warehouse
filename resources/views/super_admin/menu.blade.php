@@ -202,10 +202,12 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
+                                <label class="text-bold">MEMILIKI AKSES MENU : </label>
                                 <ul class="ListMenuExist">
                                 </ul>
                             </div>
                             <div class="col-sm-6">
+                                <label class="text-bold">TIDAK MEMILIKI AKSES MENU : </label>
                                 <ul class="ListMenuKosong">
                                 </ul>
                             </div>
@@ -224,10 +226,18 @@
         function EditPermission(kategori, nama, id) {
             if (kategori == 'permission') {
                 var value = prompt("Edit Auth Permission", nama);
-                location.href = "{{ url('permission/update_permission/permission') }}/" + value + '/' + id
+                if(value == null){
+                    return false;
+                }else{
+                    location.href = "{{ url('permission/update_permission/permission') }}/" + value + '/' + id
+                }
             } else {
                 var value = prompt("Edit Auth Group", nama);
-                location.href = "{{ url('permission/update_permission/group/') }}/" + value + '/' + id
+                if(value == null){
+                    return false;
+                }else{
+                    location.href = "{{ url('permission/update_permission/group/') }}/" + value + '/' + id
+                }
             }
         }
 
@@ -276,13 +286,13 @@
                         $('.ListMenuExist').html('')
                         $('.ListMenuKosong').html('')
                         jQuery.each(response.data.list_exist, function(id, value) {
-                            $('.ListMenuExist').append(`<li><div class="form-group form-check">
-                                                        <input type="checkbox" name="list_menu[]" value="${value.name}" checked class="form-check-input" id="exampleCheck1">${value.name}
+                            $('.ListMenuExist').append(`<li><div class="form-group form-check mt-4">
+                                                        <input mt-4 type="checkbox" name="list_menu[]" value="${value.name}" checked class="form-check-input" id="exampleCheck1">${value.name}
                                                             </div>
                                                             </li>`)
                         });
                         jQuery.each(response.data.list_kosong, function(id, val) {
-                            $('.ListMenuKosong').append(`<li><div class="form-group form-check">\
+                            $('.ListMenuKosong').append(`<li><div class="form-group form-check mt-4">\
                                                     <input type="checkbox" name="list_menu[]" value="${val[0].name}" class="form-check-input" id="exampleCheck1">${val[0].name}
                                                         </div>
                                                             </li>`)

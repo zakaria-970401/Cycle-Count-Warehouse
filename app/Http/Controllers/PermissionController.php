@@ -43,8 +43,8 @@ class PermissionController extends Controller
     {
         DB::table('auth_permission')->insert([
             'name' => $request->permission,
-            'tgl_pengisian' => date('Y-m-d'),
-            'jam_pengisian' => date('H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'codename' => $request->permission,
         ]);
         Session::flash('success', 'Data Berhasil Di Tambah');
         return back();
@@ -54,8 +54,7 @@ class PermissionController extends Controller
     {
         DB::table('auth_group')->insert([
             'name' => $request->auth_group,
-            'tgl_pengisian' => date('Y-m-d'),
-            'jam_pengisian' => date('H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
         Session::flash('success', 'Data Berhasil Di Tambah');
         return back();
@@ -72,8 +71,7 @@ class PermissionController extends Controller
             DB::table('auth_group_permission')->insert([
                 'group_id' => $auth_group->id,
                 'permission_id' => $auth_permission->id,
-                'tgl_pengisian' => date('Y-m-d'),
-                'jam_pengisian' => date('H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
         }
 

@@ -50,7 +50,7 @@
                                                     <a href="javascript:void(0)" class="btn btn-sm btn-info"
                                                         onclick="showUuser('{{ $item->id }}')"><i
                                                             class="fas fa-edit"></i> </a>
-                                                    <a href="" class="btn btn-sm btn-danger"><i
+                                                    <a href="{{url('cycle-count/superadmin/deleteUser/' . $item->id)}}" class="btn btn-sm btn-danger"><i
                                                             class="fas fa-trash-alt"></i> </a>
                                                 </td>
                                             </tr>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary btn-lg btnSave"><i class="fas fa-save"></i>
                             Save</button>
                     </div>
