@@ -41,9 +41,11 @@
                                                     @if ($item->auth_group == 1)
                                                         Super Admin
                                                     @elseif($item->auth_group == 2)
-                                                        Admin
+                                                    Admin
+                                                    @elseif($item->auth_group == 3)
+                                                    User Gudang
                                                     @else
-                                                        User Gudang
+                                                    Manager
                                                     @endif
                                                 </td>
                                                 <td>

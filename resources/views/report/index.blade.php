@@ -24,11 +24,11 @@
                                 @endfor
                               </select>
                             </div>
-                            <div class="col-sm-6 mt-4">
+                            <div class="col-sm-12 mt-4">
                                 <div id="performa_user">
                                 </div>
                             </div>
-                            <div class="col-sm-6 mt-4">
+                            <div class="col-sm-12 mt-4">
                                 <div id="reason">
                                 </div>
                             </div>

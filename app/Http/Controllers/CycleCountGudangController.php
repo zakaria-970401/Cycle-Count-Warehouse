@@ -120,6 +120,7 @@ class CycleCountGudangController extends Controller
                         ->where('id', $id[0]->id)
                         ->update([
                             'status' => 3,
+                            'qty_lapangan' => $request->qty[$i],
                             'count_at' => date('Y-m-d H:i:s'),
                             'count_by' => Auth::user()->name
                         ]);
@@ -133,12 +134,12 @@ class CycleCountGudangController extends Controller
                         ->where('id', $item[0]->id)
                         ->update([
                             'status' => 0,
+                            'qty_lapangan' => $request->qty[$i],
                             'count_at' => date('Y-m-d H:i:s'),
                             'count_by' => Auth::user()->name
                         ]);
             }
         }
-
 
         DB::table('cycle_count_logg')->insert([
             'konten' => Auth::user()->name . ' Menyelesaikan Perhitungan Cycle Count di BLOK ' . $request->blok,
@@ -216,82 +217,4 @@ class CycleCountGudangController extends Controller
             ]);
         }
     }
-
-    public function detail_spk($dept, $no_urut, $shift)
-    {
-        $data = DB::table('cycle_count')
-            ->where('dept', $dept)
-            ->where('no_urut', $no_urut)
-            ->where('shift', $shift)
-            ->get();
-
-        $blok = $data->groupBy('blok')->toArray();
-
-        $sc    = DB::table('cycle_count_sc')
-            ->where('dept', $dept)
-            ->where('no_urut', $no_urut)
-            ->get();
-
-        return response()->json([
-            'status' => 0,
-            'data'   => [
-                'data' => $data,
-                'sc' => $sc,
-                'groupby' => $blok
-            ]
-        ]);
-    }
-
-    public function cari_data($dept, $no_urut, $shift, $blok)
-    {
-        $data = DB::table('cycle_count')
-            ->where('dept', $dept)
-            ->where('no_urut', $no_urut)
-            ->where('shift', $shift)
-            ->where('blok', $blok)
-            ->get();
-
-        return response()->json([
-            'status' => 0,
-            'data' => $data,
-        ]);
-    }
-
-    public function post_revisi(Request $request)
-    {
-        $id = $request->id;
-        if ($id == null) {
-            Session::flash('error', 'Data Not Found..');
-            return back();
-        } else {
-            for ($i = 0; $i < count($id); $i++) {
-                $validasi[] = DB::table('cycle_count')->select('id', 'case_qty')->where('id', $id[$i])->get();
-                // dd($validasi[$i][0]->id);
-                if ($validasi[$i][0]->case_qty !=  $request->qty_validasi[$i]) {
-                    Session::flash('error', 'Masih Ada Selisih QTY, QTY Harus Sama Dengan Qty SAP..');
-                    return back();
-                } else {
-                    DB::table('cycle_count')->where('id', $validasi[$i][0]->id)->update([
-                        'tgl_revisi' => date('Y-m-d'),
-                        'jam_revisi' => date('H:i:s'),
-                        'status'     => 0,
-                        'reason'     => $request->reason[$i],
-                        'qty_validasi'     => $request->qty_validasi[$i],
-                    ]);
-                }
-            }
-
-            DB::table('cycle_count_logg')->insert([
-                'konten' => 'STOK CONTROL ' . $request->dept . ' Selesai Mengerjakan Revisi Pada Blok ' . $request->blok . ' Pada Tanggal ' . date('d-M-Y') . ' Jam ' . date('H:i'),
-                'tanggal' => date('Y-m-d'),
-                'jam'   => date('H:i:s'),
-                'dept'  => $request->dept,
-                'type'   => 'sc'
-            ]);
-
-            Session::flash('info', 'Qty Berhasil Di Update..');
-            return back();
-        }
-    }
-
 }
