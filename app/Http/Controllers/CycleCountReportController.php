@@ -16,193 +16,151 @@ class CycleCountReportController extends Controller
      */
     public function index()
     {
-        return view('report.index');
+        $data = DB::table('cycle_count')
+                ->where('status', 0)
+                ->whereYear('upload_at', date('Y'))
+                ->get();
+
+        $bulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        $sc = [];
+        $alasan = [];
+        
+        $user = $data->groupBy('count_by');
+        $reason = $data->whereNotNull('reason')->groupBy('reason');
+        foreach ($user as $key => $value) {
+            $sc[$key] = [];
+        }
+        foreach ($reason as $key => $value) {
+            $alasan[$key] = [];
+        }
+
+        foreach($bulan as $key => $value) {
+            // $data_sc = [];
+            foreach ($sc as $_key => $_val ) {;
+                $sc[$_key][] = DB::table('cycle_count')
+                                ->whereMonth('upload_at', $key)
+                                ->where('count_by', $_key)
+                                ->count() ;
+            }
+
+            foreach ($alasan as $_key => $_val ) {;
+                $alasan[$_key][] = DB::table('cycle_count')
+                                ->whereMonth('upload_at', $key)
+                                ->where('reason', $_key)
+                                ->count() ;
+            }
+        }
+
+        foreach($sc as $name => $count) {
+            $series[] = [
+                'name' => $name,
+                'data' => $count
+            ];
+        }
+        foreach($alasan as $name => $count) {
+            $series_reason[] = [
+                'name' => $name,
+                'data' => $count
+            ];
+        }
+
+        $series = json_encode($series);
+        $series_reason = json_encode($series_reason);
+
+        return view('report.index', compact('series', 'bulan', 'series_reason'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function CariReportDashboard($dept, $kategori)
+    public function searchByTahun($tahun)
     {
-        if($kategori == 'performa_section')
-        {
-            $data = DB::table('cycle_count')->select('reason', 'dept', 'status', 'tgl_upload')->where('dept', $dept)->where('status', 0)->whereYear('tgl_upload', date('Y'))->get();
+        $data = DB::table('cycle_count')
+                ->where('status', 0)
+                ->whereYear('upload_at', $tahun)
+                ->get();
+        if($data->count() > 0) {
+            $bulan = [
+                1 => 'Januari',
+                2 => 'Februari',
+                3 => 'Maret',
+                4 => 'April',
+                5 => 'Mei',
+                6 => 'Juni',
+                7 => 'Juli',
+                8 => 'Agustus',
+                9 => 'September',
+                10 => 'Oktober',
+                11 => 'November',
+                12 => 'Desember',
+            ];
 
-            $years_ok = (float) number_format($data->whereNull('reason')->count() / $data->count() * 100, 2);
-            $years_not_ok = (float) number_format($data->whereNotNull('reason')->count() / $data->count() * 100, 2);
-            $categories = $data->whereNotNull('reason')->groupBy('reason');
-
-            foreach($categories as $key => $value)
-            {
-                $categories_name[] = $key;
-                $categories_count[] = (float) number_format($value->count() / $data->count() * 100, 2);
-            }
-            //performance section of month
-            for($bulan=1;$bulan < 13;$bulan++)
-            { 
-                $_data = $data->filter(function($item) use ($bulan)
-                {
-                    if((int)explode('-', $item->tgl_upload)[1] == (int)$bulan)
-                    {
-                        return $item;
-                    }
-                });
-                $of_month[] = $_data->whereNull('reason')->count();
-                $counting_foreman[] = $_data->count();
-            }
-            foreach($of_month as $key => $value)
-            {
-                if(($counting_foreman[$key] * 100) == 0 ) {
-                    $month_ok[] = 0;
-                }else{
-
-                    $month_ok[] = (float) number_format($value / $counting_foreman[$key] * 100, 2);
-                }
-            }
-        // dd($month_ok, $counting_foreman);
-
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'years_ok' => $years_ok,
-                    'years_not_ok' => $years_not_ok,
-                    'month_ok' => $month_ok,
-                    'kategorinya' => 'performa_section',
-                    'categories_name' => $categories_name,
-                    'categories_count' => $categories_count,
-                    'data' => $data
-                ]
-            ]);
-    }
-
-        if($kategori == 'performa_foreman')
-        {
-            $data = DB::table('cycle_count')
-                    ->where('status', 0)
-                    ->where('dept', $dept)
-                    ->whereYear('tgl_upload', date('Y'))->get();
-            $all = $data;
-            $categories = $data->groupBy('foreman');
-            $data_grafik = [];
-
-            foreach($categories as $key => $value)
-            {
-                $ok[] = $data->where('foreman', $key)->whereNull('reason')->count();
-                $not_ok[] = $data->where('foreman', $key)->whereNotNull('reason')->count();
-            }
-            foreach($ok as $key => $value)
-            {
-                $data_grafik[] = (float) number_format($value / ($ok[$key] + $not_ok[$key]) * 100, 2);
-            }
+            $sc = [];
+            $alasan = [];
             
-            // $data_grafik = array_map('floatval', $data_grafik);
-            $summary_ok = number_format(array_sum($ok));
-            $summary_not_ok = number_format(array_sum($not_ok));
-
-            $ok = array_map(function($number) use ($ok) {
-                return number_format($number);
-            }, $ok);
-
-            $not_ok = array_map(function($number) use ($not_ok) {
-                return number_format($number);
-            }, $not_ok);
-
-            //performance section of year
-            $years_ok = (float) number_format($data->whereNull('reason')->count() / $data->count() * 100, 2);
-            $years_not_ok = (float) number_format($data->whereNotNull('reason')->count() / $data->count() * 100, 2);
-
-            for($bulan=1;$bulan < 13;$bulan++)
-            {
-                 $_data = $data->filter(function($item) use ($bulan)
-                {
-                    if((int)explode('-', $item->tgl_upload)[1] == (int)$bulan)
-                    {
-                        return $item;
-                    }
-                });
-                $of_month[] = $_data->whereNull('reason')->count();
-                $counting_foreman[] = $_data->count();
+            $user = $data->groupBy('count_by');
+            $reason = $data->whereNotNull('reason')->groupBy('reason');
+            foreach ($user as $key => $value) {
+                $sc[$key] = [];
             }
-            foreach($of_month as $key => $value)
-            {
+            foreach ($reason as $key => $value) {
+                $alasan[$key] = [];
+            }
 
-                if(($counting_foreman[$key] * 100) == 0 ) {
-                    $month_ok[] = 0;
-                }else{
+            foreach($bulan as $key => $value) {
+                // $data_sc = [];
+                foreach ($sc as $_key => $_val ) {;
+                    $sc[$_key][] = DB::table('cycle_count')
+                                    ->whereMonth('upload_at', $key)
+                                    ->where('count_by', $_key)
+                                    ->count() ;
+                }
 
-                    $month_ok[] = (float) number_format($value / $counting_foreman[$key] * 100, 2);
+                foreach ($alasan as $_key => $_val ) {;
+                    $alasan[$_key][] = DB::table('cycle_count')
+                                    ->whereMonth('upload_at', $key)
+                                    ->where('reason', $_key)
+                                    ->count() ;
                 }
             }
-            $categories = $categories->keys();
-                return response()->json([
-                    'status' => 'success',
-                    'data' => [
-                        'categories' => $categories,
-                        'all' => $all,
-                        'ok' => $ok,
-                        'not_ok' => $not_ok,
-                        'summary_ok' => $summary_ok,
-                        'summary_not_ok' => $summary_not_ok,
-                        'data_grafik' => $data_grafik,
-                        'years_ok' => $years_ok,
-                        'years_not_ok' => $years_not_ok,
-                        'month_ok' => $month_ok,
-                        'kategorinya' => 'performa_foreman',
-                        // 'pie_foreman' => $pie_foreman,
-                    ]
-                ]);
-        }
-        if($kategori == 'frekuensi')
-        {
-            $hitungan = DB::table('cycle_count')
-                        ->select('material' , 'deskripsi')
-                        ->where('dept', $dept)
-                        ->whereNull('reason')
-                        ->where('status', 0)
-                        ->whereYear('tgl_upload', date('Y'))
-                        ->groupBy('material')
-                        ->get()->pluck('material');
 
-            $master = DB::table('cycle_count_master_mid')
-                        ->select('material')
-                        ->where('gudang', $dept)
-                        ->groupBy('material')
-                        ->get()->pluck('material');
-
-            $sudah_dihitung =  $hitungan->count() / $master->count() * 100;
-            $sudah_dihitung = abs((float) number_format($sudah_dihitung, 2));
-            //------------------------------------------------------------------------------//
-            $belum_dihitung = $master->count() - $hitungan->count();
-            $belum_dihitung = $belum_dihitung /  $master->count() * 100;
-            $belum_dihitung = abs((float) number_format($belum_dihitung, 2));
-            //------------------------------------------------------------------------------//
-            $jumlah_belum_dihitung = abs($master->count() - $hitungan->count());
-
+            foreach($sc as $name => $count) {
+                $series[] = [
+                    'name' => $name,
+                    'data' => $count
+                ];
+            }
+            foreach($alasan as $name => $count) {
+                $series_reason[] = [
+                    'name' => $name,
+                    'data' => $count
+                ];
+            }
+            $series = json_encode($series);
+            $series_reason = json_encode($series_reason);
+            
             return response()->json([
-                'status' => 'success',
                 'data' => [
-                    'sudah_dihitung' => $sudah_dihitung,
-                    'belum_dihitung' => $belum_dihitung,
-                    'jumlah_belum_dihitung' => $jumlah_belum_dihitung,
-                ]
+                    'series' => $series,
+                    'series_reason' => $series_reason,
+                    'bulan' => $bulan,
+                ],
             ]);
-        }
-        if($kategori ==  'aktifitas')
-        {
-            $data = DB::table('cycle_count')->where('dept', $dept)->whereYear('tgl_upload', date('Y'))->get();
-
-            $total_aktifitas = $data->where('status', 0)->count();
-            $belum_selesai = $data->where('status', 1)->count();
-
+        }else{
             return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'total_aktifitas' => $total_aktifitas,
-                    'belum_selesai' => $belum_selesai,
-                ]
-                ]);
+                'status' => 'not found',
+            ]);
         }
     }
 

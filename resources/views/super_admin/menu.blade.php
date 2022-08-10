@@ -44,11 +44,11 @@
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>{{ $list->name }}</td>
                                                                     <td>
-                                                                        <a href="javascript:void(0)"
+                                                                        {{-- <a href="javascript:void(0)"
                                                                             onclick="EditPermission('permission', '{{ $list->name }}' , '{{ $list->id }}')"
                                                                             class="btn btn-sm btn-warning"
                                                                             style="border-radius: 10px;"><i
-                                                                                class="fas fa-edit mr-1"></i> Edit</a>
+                                                                                class="fas fa-edit mr-1"></i> Edit</a> --}}
                                                                         <a href="javascript:void(0)"
                                                                             onclick="HapusPermission('permission','{{ $list->id }}')"
                                                                             class="btn btn-sm btn-danger"
@@ -83,12 +83,12 @@
                                                                         </a>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="javascript:void(0)"
+                                                                        {{-- <a href="javascript:void(0)"
                                                                             onclick="EditPermission('group', '{{ $list->name }}', '{{ $list->id }}')"
                                                                             class="btn btn-sm btn-dark"
                                                                             style="border-radius: 10px;"><i
                                                                                 class="fas fa-edit mr-1"></i>
-                                                                            Edit</a>
+                                                                            Edit</a> --}}
                                                                         <a href="javascript:void(0)"
                                                                             onclick="HapusPermission('group','{{ $list->id }}')"
                                                                             class="btn btn-sm btn-danger"

@@ -22,7 +22,7 @@
                             <!--end::Title-->
                             <!--begin::Illustration-->
                             <div class="py-10 text-center">
-                                <img src="{{ url('assets/media/svg/illustrations/easy/4.svg') }}" class="w-200px"
+                                <img src="{{ url('assets/media/icons/agency.png') }}" class="w-200px"
                                     alt="" />
                             </div>
                             <!--end::Illustration-->

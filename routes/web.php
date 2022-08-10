@@ -54,6 +54,7 @@ Route::prefix('cycle-count/superadmin')->group(function () {
 
 Route::prefix('cycle-count/report')->group(function () {
     Route::get('/', [CycleCountReportController::class, 'index']);
+    Route::get('/searchByTahun/{tahun}', [CycleCountReportController::class, 'searchByTahun']);
 });
 
 Route::prefix('permission/')->group(function () {
@@ -71,4 +72,4 @@ Route::get('cycle-count/jadwal', [CycleCountAdminController::class, 'jadwal']);
 Route::get('cycle-count/generateExcel', [CycleCountAdminController::class, 'generateExcel']);
 Route::get('cycle-count/cariData/{tgl_mulai}/{tgl_selesai}', [CycleCountAdminController::class, 'cariData']);
 Route::get('cycle-count/showJadwal/{tanggal}', [CycleCountAdminController::class, 'showJadwal']);
-Route::get('user/profile', [UserController::class, 'index']);
+// Route::get('user/profile', [UserController::class, 'index']);
