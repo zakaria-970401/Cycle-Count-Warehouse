@@ -93,32 +93,6 @@ class CycleCountAdminController extends Controller
         return view('generate_excel');
     }
 
-    public function detail_spk($dept, $no_urut, $shift)
-    {
-        $data = DB::table('cycle_count')
-            ->where('dept', $dept)
-            ->where('no_urut', $no_urut)
-            ->where('shift', $shift)
-            ->get();
-        // dd($data->where('status',  0 ));
-
-        $blok = $data->groupBy('blok')->toArray();
-
-        $sc    = DB::table('cycle_count_sc')
-            ->where('dept', $dept)
-            ->where('no_urut', $no_urut)
-            ->get();
-
-        return response()->json([
-            'status' => 0,
-            'data'   => [
-                'data' => $data,
-                'sc' => $sc,
-                'groupby' => $blok
-            ]
-        ]);
-    }
-
     public function cariData($tgl_mulai, $tgl_selesai)
     {
         $data = DB::table('cycle_count')

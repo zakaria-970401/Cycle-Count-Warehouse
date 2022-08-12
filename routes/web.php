@@ -51,6 +51,7 @@ Route::prefix('cycle-count/superadmin')->group(function () {
     Route::POST('/updateUser', [CycleCountSuperAdminController::class, 'updateUser']);
     Route::get('/menu', [CycleCountSuperAdminController::class, 'aksesMenu']);
 });
+Route::POST('/change-password', [CycleCountSuperAdminController::class, 'change_password']);
 
 Route::prefix('cycle-count/report')->group(function () {
     Route::get('/', [CycleCountReportController::class, 'index']);

@@ -164,8 +164,7 @@
                                         <!--end::Menu separator-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-5">
-                                            {{-- <a href="{{ url('user/profile') }}" class="menu-link px-5">My
-                                                Profile</a> --}}
+                                            <a href="#ganti-pw" data-bs-toggle="modal" class="menu-link px-5">Ganti Password</a>
                                         </div>
                                         <div class="menu-item px-5">
                                             <hr>
@@ -218,6 +217,39 @@
             <!--end::Page-->
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="ganti-pw" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Form Ganti Password</h5>
+                    </div>
+                    <form action="{{url('change-password')}}" method="post" id="change-password">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                  <input type="password" name="password" id="" class="form-control Password" placeholder="Masukan Password Baru" aria-describedby="helpId" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mt-4">
+                                <div class="form-group">
+                                  <input type="password" name="password_konfirm" id="" class="form-control Password" placeholder="Konfirmasi Password" aria-describedby="helpId" required>
+                                </div>
+                                <input type="checkbox" class="ml-4 mr-4 mt-4" id="showPass"> Show Password
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary"> Update</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
         <script>
             var hostUrl = "{{ url('/') }}";
         </script>
@@ -238,6 +270,48 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+
+            $('#showPass').on('click', function(){
+            var passInput=$(".Password");
+            if(passInput.attr('type')==='password')
+                {
+                passInput.attr('type','text');
+            }else{
+                passInput.attr('type','password');
+            }
+        });
+
+            $('#change-password').on('submit', function(e){
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var data = form.serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        if(response.status == 'gagal'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Password tidak sama!',
+                            });
+                        }else if(response.status == 'kurang'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Password minimal 6 karakter!',
+                            });
+                            // toastr.error(data.message);
+                        }else{
+                            toastr.success('Password berhasil diubah');
+                            location.reload();
+                        }
+                    }
+                });
             });
 
             function kasihNol($data) {

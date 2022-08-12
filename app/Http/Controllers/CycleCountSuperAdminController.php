@@ -121,4 +121,28 @@ class CycleCountSuperAdminController extends Controller
             ],
         ]);
     }
+
+    public function change_password(Request $request){
+        $validate = $request->password != $request->password_konfirm;
+        if($validate){
+           return response()->json([
+               'status' => 'gagal',
+           ]);
+        }else if(strlen($request->password) < 6){
+            return response()->json([
+                'status' => 'kurang',
+            ]);
+        }else{
+            DB::table('users')->where('id', Auth::user()->id)->update([
+                'password' => bcrypt($request->password),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'updated_by' => Auth::user()->name,
+            ]);
+            Auth::logout();
+            return response()->json([
+                'status' => 'ok',
+            ]);
+            // return back();
+        }
+    }
 }
