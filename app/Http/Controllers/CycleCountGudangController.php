@@ -102,7 +102,12 @@ class CycleCountGudangController extends Controller
                 ->where('case_qty', '!=', $request->qty[$i])
                 ->get()
                 ->toArray();
-            
+                
+                DB::table('cycle_count')
+                    ->where('id', $request->id[$i])
+                    ->update([
+                        'qty_lapangan' => $request->qty[$i],
+                    ]);
 
             if (count($sesuai) <= 0) {
                 $diff[] = 1;
@@ -115,12 +120,12 @@ class CycleCountGudangController extends Controller
         $id_ok = array_filter($oke);
         //update not oke
         if(count($id_notok) > 0){
-            foreach($id_notok as $id){
+            foreach($id_notok as $key => $id){
                 DB::table('cycle_count')
                         ->where('id', $id[0]->id)
                         ->update([
                             'status' => 3,
-                            'qty_lapangan' => $request->qty[$i],
+                            // 'qty_lapangan' => $request->qty[$key],
                             'count_at' => date('Y-m-d H:i:s'),
                             'count_by' => Auth::user()->name
                         ]);
@@ -134,7 +139,7 @@ class CycleCountGudangController extends Controller
                         ->where('id', $item[0]->id)
                         ->update([
                             'status' => 0,
-                            'qty_lapangan' => $request->qty[$i],
+                            // 'qty_lapangan' => $request->qty[$i],
                             'count_at' => date('Y-m-d H:i:s'),
                             'count_by' => Auth::user()->name
                         ]);
