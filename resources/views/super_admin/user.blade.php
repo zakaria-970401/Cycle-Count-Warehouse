@@ -12,7 +12,7 @@
     </style>
     <div class="container-xxl" id="kt_content_container">
         <div class="row g-5 g-xl-8">
-            <div class="col-xxl-4">
+            <div class="col-xxl-12">
                 <div class="card mb-5 mb-xl-8">
                     <div class="card-body mb-4">
                         <div class="row">

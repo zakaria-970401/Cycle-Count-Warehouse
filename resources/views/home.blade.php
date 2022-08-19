@@ -8,7 +8,7 @@
         <!--begin::Row-->
         <div class="row g-5 g-xl-8">
             <!--begin::Col-->
-            <div class="col-xxl-4">
+            <div class="col-xxl-12">
                 <!--begin::Mixed Widget 5-->
                 <div class="card card-xl-stretch mb-5 mb-xl-8">
                     <div class="card-body d-flex flex-column flex-center">

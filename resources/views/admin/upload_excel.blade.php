@@ -12,7 +12,7 @@
     </style>
     <div class="container-xxl" id="kt_content_container">
         <div class="row g-5 g-xl-8">
-            <div class="col-xxl-4">
+            <div class="col-xxl-12">
                 @if (count($data) == 0)
                     <form action="{{ url('cycle-count/admin/upload') }}" method="post" enctype="multipart/form-data"
                         id="form-upload">

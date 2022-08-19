@@ -208,14 +208,13 @@
 
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
                     <!--begin::Container-->
-                    <div class="container-xxl" id="kt_content_container">
                         @yield('content')
-                    </div>
                 </div>
                 <!--end::Wrapper-->
             </div>
             <!--end::Page-->
         </div>
+    </div>
 
         <!-- Modal -->
         <div class="modal fade" id="ganti-pw" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
